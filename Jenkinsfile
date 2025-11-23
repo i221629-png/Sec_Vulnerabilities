@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven' // must match the name in Global Tool Configuration
+    }
+
     parameters {
         booleanParam(name: 'executeBuild', defaultValue: true, description: 'Run the Build stage?')
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Run the Test stage?')
@@ -13,21 +17,16 @@ pipeline {
 
     stages {
         stage('Build') {
-            when {
-                expression { params.executeBuild == true }
-            }
+            when { expression { params.executeBuild } }
             steps {
                 echo "Building ${env.APP_NAME} version ${env.VERSION}..."
-                // Maven commands
                 bat 'mvn -version'
                 bat 'mvn clean package'
             }
         }
 
         stage('Test') {
-            when {
-                expression { params.executeTests == true }
-            }
+            when { expression { params.executeTests } }
             steps {
                 echo "Testing ${env.APP_NAME} version ${env.VERSION}..."
             }
@@ -41,8 +40,6 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Pipeline Completed'
-        }
+        always { echo 'Pipeline Completed' }
     }
 }
