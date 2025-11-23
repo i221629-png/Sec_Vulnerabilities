@@ -1,11 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'  
-    }
-
     parameters {
+        booleanParam(name: 'executeBuild', defaultValue: true, description: 'Run the Build stage?')
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Run the Test stage?')
     }
 
@@ -16,10 +13,14 @@ pipeline {
 
     stages {
         stage('Build') {
+            when {
+                expression { params.executeBuild == true }
+            }
             steps {
                 echo "Building ${env.APP_NAME} version ${env.VERSION}..."
-                bat 'mvn -version'       // Check Maven installation
-                bat 'mvn clean package'  // Build Java project
+                // Maven commands
+                bat 'mvn -version'
+                bat 'mvn clean package'
             }
         }
 
