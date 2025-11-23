@@ -5,10 +5,15 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Run the Test stage?')
     }
 
+    environment {
+        VERSION = '1.0.0'
+        APP_NAME = 'Sec_Vuln_App'
+    }
+
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo "Building ${env.APP_NAME} version ${env.VERSION}..."
             }
         }
 
@@ -17,13 +22,13 @@ pipeline {
                 expression { params.executeTests == true }
             }
             steps {
-                echo 'Testing...'
+                echo "Testing ${env.APP_NAME} version ${env.VERSION}..."
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
+                echo "Deploying ${env.APP_NAME} version ${env.VERSION}..."
             }
         }
     }
